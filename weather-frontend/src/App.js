@@ -9,11 +9,12 @@ function App() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const API_BASE = process.env.REACT_APP_BACKEND_URL;
   const getWeatherByCity = async (cityName) => {
     if (!cityName) return;
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/weather?city=${cityName}`);
+      const res = await axios.get(`${API_BASE}/weather?city=${cityName}`);
       setWeather(res.data);
       setCity(res.data.name);
       setError('');
@@ -28,7 +29,7 @@ function App() {
   const getWeatherByCoords = async (lat, lon) => {
     try {
       setLoading(true);
-      const res = await axios.get(`https://weather-backend-hfh1.onrender.com/weather?lat=${lat}&lon=${lon}`);
+      const res = await axios.get(`${API_BASE}/weather?lat=${lat}&lon=${lon}`);
       setWeather(res.data);
       setCity(res.data.name);
       setError('');
