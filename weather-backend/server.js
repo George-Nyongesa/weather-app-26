@@ -28,6 +28,10 @@ app.get('/weather', async (req, res) => {
       res.status(404).json({ error: 'City not found' });
   }
 });
+app.get('/', (req, res) => {
+  res.send('Weather API is running 🌤️');
+});
+
 
 
 const PORT = process.env.PORT || 5000;
