@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { WiThermometer, WiHumidity, WiStrongWind } from 'react-icons/wi';
 import './App.css';
@@ -26,20 +26,22 @@ function App() {
     }
   };
 
-  const getWeatherByCoords = async (lat, lon) => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_BASE}/weather?lat=${lat}&lon=${lon}`);
-      setWeather(res.data);
-      setCity(res.data.name);
-      setError('');
-    } catch (err) {
-      setError('Could not detect location weather');
-      setWeather(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const getWeatherByCoords = useCallback(async (lat, lon) => {
+  try {
+    setLoading(true);
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/weather?lat=${lat}&lon=${lon}`
+    );
+    setWeather(res.data);
+    setCity(res.data.name);
+    setError('');
+  } catch (err) {
+    setError('Could not detect location weather');
+    setWeather(null);
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -55,7 +57,8 @@ function App() {
     } else {
       setError('Geolocation not supported by your browser');
     }
-  }, []);
+  }, [getWeatherByCoords]);
+
 
   const getWeatherIconUrl = (iconCode) =>
     `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
